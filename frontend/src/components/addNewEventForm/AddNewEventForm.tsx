@@ -1,0 +1,106 @@
+import React, { FunctionComponent, ReactElement, useState } from "react";
+import { useForm } from "react-hook-form";
+import { ErrorAlert } from "../errorAlert/ErrorAlert";
+import { LoadingBar } from "../loadingBar/LoadingBar";
+import "./AddNewEventForm.scss";
+import { useHttpClient } from "../../hooks/useHttpClient";
+import { useHistory } from "react-router";
+import { Layout, Form, Select, Button, DatePicker, Input } from "antd";
+
+type SubmittedData = { [s: string]: string };
+
+
+export const AddNewEventForm: FunctionComponent = (): ReactElement => {
+  const { register, handleSubmit, watch, errors } = useForm();
+  const [data, setData] = useState<string | undefined>();
+  const [newEventId, setNewEventId] = useState<string | null>(null);
+
+  // const data: SubmittedData = watch();
+  const history = useHistory();
+  const { isLoading, error, sendRequest } = useHttpClient();
+  const addNewNewEvent = async (
+    name: string,
+    email: string,
+    date: string
+  ): Promise<void> => {
+    try {
+      const responseData = await sendRequest(
+        `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/addNewEvent`,
+        "POST",
+        JSON.stringify({
+          name,
+          email,
+          date,
+        }),
+        {
+          "Content-Type": "application/json",
+        }
+      );
+      console.log(responseData)
+      // setNewEventId(responseData);
+    } catch (err) {
+      console.warn(`cannot add new point, `, err.message);
+    }
+  };
+  const onSubmit = (data: SubmittedData): void => {
+    const { name, email, date } = data;
+      addNewNewEvent(name, email, date)
+  };
+
+
+
+  if (newEventId) {
+    history.push({ pathname: newEventId });
+  }
+  if (isLoading) {
+    return <LoadingBar />;
+  }
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="form">
+      <h2>Add New Event</h2>
+      <div className="form--item">
+        <input
+          type="text"
+          name="name"
+          placeholder="Name"
+          ref={register({ required: "Name is required", minLength: 3 })}
+          className="form--input"
+        />
+        {errors.name && <ErrorAlert errorMessage="Name is required" />}
+      </div>
+      <div className="form--item">
+        <input
+          type="text"
+          name="email"
+          placeholder="Email"
+          ref={register({
+            required: "Email is required",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: "invalid email address"
+            }
+          })}
+          className="form--input"
+  
+        />
+        {errors.email && <ErrorAlert errorMessage={errors.email.message} />}
+      </div>
+
+      <div className="form--item">
+        <DatePicker
+            name="startDate"
+            onChange={(_date: any, dateString: string):void=> setData(dateString)}
+            style={{width: '200px'}}
+            size="large"
+        />
+        {Object.values(errors).length > 0 && !data && <ErrorAlert errorMessage="Date is required" />}
+
+      </div>
+
+    <Button type='primary' htmlType='submit' className="btn-form">
+        Add event
+    </Button>
+    </form>
+  );
+};
