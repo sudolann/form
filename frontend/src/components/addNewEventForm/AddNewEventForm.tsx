@@ -2,22 +2,21 @@ import React, { FunctionComponent, ReactElement, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ErrorAlert } from "../errorAlert/ErrorAlert";
 import { LoadingBar } from "../loadingBar/LoadingBar";
-import "./AddNewEventForm.scss";
 import { useHttpClient } from "../../hooks/useHttpClient";
 import { useHistory } from "react-router";
-import { Layout, Form, Select, Button, DatePicker, Input } from "antd";
+import { Button, DatePicker } from "antd";
+import "./AddNewEventForm.scss";
 
 type SubmittedData = { [s: string]: string };
 
 
 export const AddNewEventForm: FunctionComponent = (): ReactElement => {
-  const { register, handleSubmit, watch, errors } = useForm();
-  const [data, setData] = useState<string | undefined>();
+  const { register, handleSubmit, errors } = useForm();
+  const [date, setDate] = useState<string | undefined>();
   const [newEventId, setNewEventId] = useState<string | null>(null);
-
-  // const data: SubmittedData = watch();
   const history = useHistory();
   const { isLoading, error, sendRequest } = useHttpClient();
+
   const addNewNewEvent = async (
     name: string,
     email: string,
@@ -36,29 +35,31 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           "Content-Type": "application/json",
         }
       );
-      console.log(responseData)
-      // setNewEventId(responseData);
+      setNewEventId(responseData.eventId);
     } catch (err) {
       console.warn(`cannot add new point, `, err.message);
     }
   };
   const onSubmit = (data: SubmittedData): void => {
-    const { name, email, date } = data;
-      addNewNewEvent(name, email, date)
+    const { name, email } = data;
+    date && addNewNewEvent(name, email, date)
   };
-
-
 
   if (newEventId) {
     history.push({ pathname: newEventId });
   }
+  
+
+
   if (isLoading) {
     return <LoadingBar />;
   }
 
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <h2>Add New Event</h2>
+      {error && <ErrorAlert errorMessage={error}/>}
       <div className="form--item">
         <input
           type="text"
@@ -82,7 +83,6 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
             }
           })}
           className="form--input"
-  
         />
         {errors.email && <ErrorAlert errorMessage={errors.email.message} />}
       </div>
@@ -90,11 +90,11 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
       <div className="form--item">
         <DatePicker
             name="startDate"
-            onChange={(_date: any, dateString: string):void=> setData(dateString)}
+            onChange={(_date: any, dateString: string):void=> setDate(dateString)}
             style={{width: '200px'}}
             size="large"
         />
-        {Object.values(errors).length > 0 && !data && <ErrorAlert errorMessage="Date is required" />}
+        {Object.values(errors).length > 0 && !date && <ErrorAlert errorMessage="Date is required" />}
 
       </div>
 

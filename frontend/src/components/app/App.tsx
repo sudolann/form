@@ -9,7 +9,7 @@ export const App: FunctionComponent = (): ReactElement => {
   return (
     <div className="container">
       <Switch>
-        <Route path="/" component={AddNewEventForm} />
+        <Route path="/" exact component={AddNewEventForm} />
         <Route path="/:eventId" component={EventById} />
       </Switch>
     </div>
