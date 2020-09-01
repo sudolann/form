@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorAlert should take a snapshot 1`] = `
+<DocumentFragment>
+  <p
+    class="alert"
+  >
+    test
+  </p>
+</DocumentFragment>
+`;
+
+exports[`ErrorAlert should take a snapshot when fullPage is true 1`] = `
+<DocumentFragment>
+  <div
+    class="flex"
+  >
+    <p
+      class="alert"
+    >
+      test
+    </p>
+  </div>
+</DocumentFragment>
+`;
