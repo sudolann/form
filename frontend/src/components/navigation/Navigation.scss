@@ -1,0 +1,18 @@
+$gray: #5A5A5A;
+
+.nav {
+    height: 85px;
+    width: 200px;
+    white-space: nowrap;
+    position: relative;
+    margin: 0 auto;
+
+}
+
+.nav--link {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: $gray;
+    cursor: pointer;
+}

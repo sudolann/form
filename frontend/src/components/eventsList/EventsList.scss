@@ -1,0 +1,29 @@
+$gray: #5A5A5A;
+
+.list {
+    margin: 0;
+    text-indent: 0;
+    list-style-type: 0;
+    list-style: none;
+    padding-inline-start: 10px;
+    height: 500px;
+    width: 90%;
+
+}
+
+.list--li {
+    border: solid 3px $gray;
+    min-width: 200px;
+    padding: 5px;
+    margin-bottom: 5px;
+    display: flex;
+
+    p {
+        display: inline-block;
+        width: 30%;
+    }
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
+}

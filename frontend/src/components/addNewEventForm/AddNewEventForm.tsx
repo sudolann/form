@@ -15,7 +15,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
   const [date, setDate] = useState<string | undefined>();
   const [newEventId, setNewEventId] = useState<string | null>(null);
   const history = useHistory();
-  const { isLoading, error, sendRequest } = useHttpClient();
+  const { isLoading, error, sendRequest, setError } = useHttpClient();
 
   const addNewNewEvent = async (
     name: string,
@@ -37,7 +37,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
       );
       setNewEventId(responseData.eventId);
     } catch (err) {
-      console.warn(`cannot add new point, `, err.message);
+      setError(err.message);
     }
   };
   const onSubmit = (data: SubmittedData): void => {
@@ -46,7 +46,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
   };
 
   if (newEventId) {
-    history.push({ pathname: newEventId });
+    history.push({ pathname: `/event/${newEventId}` });
   }
   
 

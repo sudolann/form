@@ -26,9 +26,7 @@ export const EventById: FunctionComponent = (): ReactElement | null => {
   useEffect((): void => {
     const fetchEvent = async (): Promise<void> => {
       try {
-        const responseData = await sendRequest(
-          `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/${eventId}`,
-        );
+        const responseData = await sendRequest(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/${eventId}`);
         setEventData(responseData.event);
       } catch (err) {
         console.warn('cannot find event', err.message);
