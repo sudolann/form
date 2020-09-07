@@ -1,4 +1,10 @@
 import { model, Schema } from 'mongoose';
+import Document from './document';
+export interface IEvent extends Document<IEvent> {
+  name: string;
+  email: string;
+  date: string;
+}
 
 const schema = new Schema({
   name: {
@@ -15,4 +21,4 @@ const schema = new Schema({
   },
 });
 
-export default model('Event', schema);
+export default model<IEvent>('Event', schema);

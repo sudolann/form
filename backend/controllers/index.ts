@@ -1,29 +1,21 @@
-const HttpError = require('../models/http-error');
-import Event from '../models/event';
+import HttpError from '../models/http-error';
+import Event, { IEvent } from '../models/event';
 
-
-export const getAllEvents = async (
-  _req: any,
-  res: any,
-  next: (arg0: any) => any
-) => {
-  let events;
+export const getAllEvents = async (_req: any, res: any, next: (arg0: any) => any) => {
+  let events: IEvent[];
   try {
     events = await Event.find();
   } catch (err) {
-    const error = new HttpError(
-      'Fetching events failed, please try again later.',
-      500
-    );
+    const error = new HttpError('Fetching events failed, please try again later.', 500);
     return next(error);
   }
+
   if (events.length === 0) {
     const error = new HttpError('No data found, please try again later.');
     return next(error);
   }
-  const eventsList = events.map((event: { _id: string; name: string; date: string})=> { id: event._id })
-  res.status(200).json(eventsList);
 
+  res.status(200).json(events); 
 };
 
 export const addEvent = async (req: any, res: any, next: (arg0: any) => any) => {
@@ -42,7 +34,7 @@ export const addEvent = async (req: any, res: any, next: (arg0: any) => any) => 
     return next(error);
   }
   res.status(201).json({
-    eventId: createdNewEvent.id,
+    eventId: createdNewEvent._id,
   });
 };
 
@@ -53,12 +45,12 @@ export const getEventById = async (req: { params: { eventId: string } }, res: { 
   try {
     event = await Event.findOne({ _id: eventId });
   } catch (err) {
-    const error = new HttpError('Fetching event failed, please try again later.', 500);
+    const error = new HttpError(err.reason, 500);
     return next(error);
   }
 
-  if (!event) {
-    return next(new HttpError('Cant find the event', 404));
+  if(!event) {
+    return next(new HttpError("Cant find the event", 500));
   }
 
   res.json({ event });
@@ -68,13 +60,10 @@ export const deleteEvent = async (req: { params: { eventId: string } }, res: { j
   const eventId = req.params.eventId;
   let event;
   try {
-   
-    event= await Event.findByIdAndDelete(eventId);
-
+    event = await Event.findByIdAndDelete(eventId);
   } catch (err) {
     const error = new HttpError('Delete event failed, please try again later.', 500);
     return next(error);
   }
   res.json({ event });
 };
-
