@@ -23,13 +23,13 @@ export const EventById: FunctionComponent = (): ReactElement | null => {
   const { isLoading, error, sendRequest } = useHttpClient();
   const [eventData, setEventData] = useState<EventProps | undefined>();
   const history = useHistory();
+  
   useEffect((): void => {
     const fetchEvent = async (): Promise<void> => {
       try {
-        const responseData = await sendRequest(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/${eventId}`);
+        const responseData = await sendRequest(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/event/${eventId}`);
         setEventData(responseData.event);
       } catch (err) {
-        console.warn('cannot find event', err.message);
       }
     };
     fetchEvent();

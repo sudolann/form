@@ -46,7 +46,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
   };
 
   if (newEventId) {
-    history.push({ pathname: `/event/${newEventId}` });
+    history.push({ pathname: `/${newEventId}` });
   }
   
 
