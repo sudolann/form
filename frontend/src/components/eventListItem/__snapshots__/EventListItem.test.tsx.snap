@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EventListItem should take a snapshot 1`] = `
+<DocumentFragment>
+  <li
+    class="list--li"
+  >
+    <p>
+      name: test
+    </p>
+    <p>
+      email: me@email.com
+    </p>
+    <p>
+      date: 20.01.2021
+    </p>
+  </li>
+</DocumentFragment>
+`;

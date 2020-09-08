@@ -1,13 +1,11 @@
 import React, { FunctionComponent, ReactElement } from 'react';
-import { EventPropsState } from '../eventsList/EventsList';
+import { EventProps } from '../eventById/EventById';
 
-export const EventListItem: FunctionComponent<EventPropsState> = ({
+export const EventListItem: FunctionComponent<EventProps> = ({
   name,
   email,
   date,
-  id,
 }): ReactElement => {
-
   return (
     <li className="list--li">
       <p>name: {name}</p>

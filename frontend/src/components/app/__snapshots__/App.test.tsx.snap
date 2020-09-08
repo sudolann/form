@@ -13,7 +13,7 @@ exports[`App should take a snapshot 1`] = `
         class="nav--link active"
         href="/"
       >
-        Events List
+        Events list
       </a>
       <a
         class="nav--link"

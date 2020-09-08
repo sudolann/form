@@ -41,29 +41,23 @@ export const EventsList: FunctionComponent = (): ReactElement => {
     return <LoadingBar />;
   }
   if (error) {
-    return (
-      <ErrorAlert errorMessage={error} fullPage />
-    );
+    return <ErrorAlert errorMessage={error} fullPage />;
   }
   return (
     <ul className="list">
+      <h1>Events List</h1>
       {eventsList &&
-        (eventsList.length === 0 ? (
-          <ErrorAlert errorMessage="No events" fullPage />
-        ) : (
-          eventsList.map((event: EventPropsState) => {
-            const { name, date, email, id } = event;
-            return (
-              <EventListItem
-                name={name}
-                date={date}
-                email={email}
-                key={id}
-                id={id}
-              />
-            );
-          })
-        ))}
+        eventsList.map((event: EventPropsState) => {
+          const { name, date, email, id } = event;
+          return (
+            <EventListItem
+              name={name}
+              date={date}
+              email={email}
+              key={id}
+            />
+          );
+        })}
     </ul>
   );
 };

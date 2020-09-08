@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navigation should take a snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="nav"
+  >
+    <a
+      aria-current="page"
+      class="nav--link active"
+      href="/"
+    >
+      Events list
+    </a>
+    <a
+      class="nav--link"
+      href="/form"
+    >
+      Add new event
+    </a>
+  </div>
+</DocumentFragment>
+`;
