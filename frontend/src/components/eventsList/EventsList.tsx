@@ -42,7 +42,7 @@ export const EventsList: FunctionComponent = (): ReactElement => {
   }
   if (error) {
     return (
-      <ErrorAlert errorMessage="error with fetch events" fullPage />
+      <ErrorAlert errorMessage={error} fullPage />
     );
   }
   return (

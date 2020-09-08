@@ -55,7 +55,6 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
     return <LoadingBar />;
   }
 
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <h2>Add New Event</h2>
@@ -68,7 +67,9 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           ref={register({ required: "Name is required", minLength: 3 })}
           className="form--input"
         />
-        {errors.name && <ErrorAlert errorMessage="Name is required" />}
+        {errors.name && <ErrorAlert errorMessage={errors.name.message} />}
+        {errors.name && errors.name.type === "minLength" && <ErrorAlert errorMessage="Min three letters name" />}
+
       </div>
       <div className="form--item">
         <input
@@ -79,7 +80,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
             required: "Email is required",
             pattern: {
               value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-              message: "invalid email address"
+              message: "Invalid email address"
             }
           })}
           className="form--input"
@@ -89,7 +90,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
 
       <div className="form--item">
         <DatePicker
-            name="startDate"
+            name="event date"
             onChange={(_date: any, dateString: string):void=> setDate(dateString)}
             style={{width: '200px'}}
             size="large"

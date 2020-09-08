@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 export const Navigation: FunctionComponent = (): ReactElement => (
     <div className="nav">
         <NavLink to="/" className="nav--link">
-            Events List
+            Events list
         </NavLink>
         <NavLink to="/form" className="nav--link">
             Add new event

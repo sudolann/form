@@ -11,7 +11,7 @@ export const getAllEvents = async (_req: any, res: any, next: (arg0: any) => any
   }
 
   if (events.length === 0) {
-    const error = new HttpError('No data found, please try again later.');
+    const error = new HttpError('No events found, please add event.');
     return next(error);
   }
 
