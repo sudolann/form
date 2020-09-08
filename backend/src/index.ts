@@ -20,10 +20,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
-app.use((_req, res, next) => {
+app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE');
   next();
 });
 
@@ -32,10 +32,11 @@ app.use('/', routes);
 
 const PORT = process.env.PORT || 5000;
 
-app.use(() => {
-  const error = new HttpError('Could not find this route.', 404);
-  throw error;
-});
+// app.use((req, res, next) => {
+//   console.log(HttpError);
+//   const error = new Error('Could not find this route.');
+//   throw error;
+// });
 
 app.use((error: any, _req: any, res: any, next: any) => {
   if (res.headerSent) {
