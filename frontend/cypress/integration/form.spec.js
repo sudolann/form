@@ -46,7 +46,7 @@ context('Form', () => {
     })
 
     it('goes back to main page after clicking button', () => {
-        cy.visit('http://localhost:3000/5f574beced019d09776c86b5')
+        cy.visit('http://localhost:3000/5f573b53ed019d09776c86ac')
         cy.get('button').contains('back to main page').click();
         cy.location('pathname').should('eq', '/');
     });
