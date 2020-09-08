@@ -55,15 +55,3 @@ export const getEventById = async (req: { params: { eventId: string } }, res: { 
 
   res.json({ event });
 };
-
-export const deleteEvent = async (req: { params: { eventId: string } }, res: { json: (arg0: { event: any }) => void }, next: (arg0: any) => any) => {
-  const eventId = req.params.eventId;
-  let event;
-  try {
-    event = await Event.findByIdAndDelete(eventId);
-  } catch (err) {
-    const error = new HttpError('Delete event failed, please try again later.', 500);
-    return next(error);
-  }
-  res.json({ event });
-};
