@@ -33,7 +33,6 @@ app.use('/', routes);
 const PORT = process.env.PORT || 5000;
 
 app.use((req, res, next) => {
-  console.log(HttpError);
   const error = new Error('Could not find this route.');
   throw error;
 });
