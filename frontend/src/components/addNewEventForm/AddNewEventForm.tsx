@@ -1,14 +1,13 @@
-import React, { FunctionComponent, ReactElement, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
+/* eslint-disable no-useless-escape */
+import React, { FunctionComponent, ReactElement, useState } from 'react';
 import { ErrorAlert } from '../errorAlert/ErrorAlert';
 import { LoadingBar } from '../loadingBar/LoadingBar';
 import { useHttpClient } from '../../hooks/useHttpClient';
 import { useHistory } from 'react-router';
 import { Button, DatePicker } from 'antd';
-import './AddNewEventForm.scss';
 import { EventProps } from '../eventById/EventById';
+import './AddNewEventForm.scss';
 
-// type SubmittedData = { [s: string]: string };
 const validateForm = (errors: EventProps, inputs: EventProps): boolean => {
   let valid = true;
   if (Object.values(errors).some((val) => val !== '')) valid = false;
@@ -50,7 +49,6 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
       case 'email':
         errors.email = validEmailRegex.test(value) ? '' : 'Email is not valid!';
         break;
-
       default:
         break;
     }
@@ -75,7 +73,9 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
       <h2>Add New Event</h2>
       {error && <ErrorAlert errorMessage={error} />}
       <div className="form--item">
+        <label htmlFor="name"> Event Name</label>
         <input
+          id="name"
           type="text"
           name="name"
           placeholder="Name"
@@ -101,7 +101,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           name="event date"
           onChange={(_date: any, dateString: string): any =>
             dateString === ''
-              ? setErrors({ ...errors, date: 'Date is required' })
+              ? setErrors({ ...errors, date: 'Date is required!' })
               : (setInputs({ ...inputs, date: dateString }), setErrors({ ...errors, date: '' }))
           }
           style={{ width: '200px' }}
