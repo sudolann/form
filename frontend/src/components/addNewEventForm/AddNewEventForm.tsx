@@ -21,7 +21,6 @@ const validEmailRegex = RegExp(
 const initialValue = { name: '', email: '', date: '' };
 
 export const AddNewEventForm: FunctionComponent = (): ReactElement => {
-  // const { register, handleSubmit, errors, watch } = useForm();
   const [inputs, setInputs] = useState<EventProps>(initialValue);
   const [errors, setErrors] = useState<EventProps>(initialValue);
 
@@ -73,12 +72,11 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
       <h2>Add New Event</h2>
       {error && <ErrorAlert errorMessage={error} />}
       <div className="form--item">
-        <label htmlFor="name"> Event Name</label>
+        <label htmlFor="name">Event Name</label>
         <input
           id="name"
           type="text"
           name="name"
-          placeholder="Name"
           value={inputs.name}
           onChange={handleChange}
           className="form--input"
@@ -91,7 +89,6 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           id="email"
           type="email"
           name="email"
-          placeholder="Email"
           value={inputs.email}
           onChange={handleChange}
           className="form--input"
@@ -99,7 +96,9 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
         <ErrorAlert errorMessage={errors.email} />
       </div>
       <div className="form--item">
+        <label htmlFor="event">Event Date</label>
         <DatePicker
+          id="event"
           name="event date"
           onChange={(_date: any, dateString: string): any =>
             dateString === ''

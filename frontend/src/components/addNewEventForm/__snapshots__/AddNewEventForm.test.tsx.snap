@@ -14,22 +14,19 @@ exports[`AddNewEventForm should take a snapshot 1`] = `
       <label
         for="name"
       >
-         Event Name
+        Event Name
       </label>
       <input
         class="form--input"
         id="name"
         name="name"
-        placeholder="Name"
         type="text"
-        value="Event name must be 3 characters long!"
+        value=""
       />
       <p
         class="alert"
         data-testid="error"
-      >
-        Event name must be 3 characters long!
-      </p>
+      />
     </div>
     <div
       class="form--item"
@@ -43,20 +40,22 @@ exports[`AddNewEventForm should take a snapshot 1`] = `
         class="form--input"
         id="email"
         name="email"
-        placeholder="Email"
         type="email"
-        value="Email is not valid!"
+        value=""
       />
       <p
         class="alert"
         data-testid="error"
-      >
-        Email is not valid!
-      </p>
+      />
     </div>
     <div
       class="form--item"
     >
+      <label
+        for="event"
+      >
+        Event Date
+      </label>
       <div
         class="ant-picker ant-picker-large"
         style="width: 200px;"
@@ -66,6 +65,7 @@ exports[`AddNewEventForm should take a snapshot 1`] = `
         >
           <input
             autocomplete="off"
+            id="event"
             name="event date"
             placeholder="Select date"
             readonly=""
