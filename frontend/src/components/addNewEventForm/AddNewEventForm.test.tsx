@@ -2,11 +2,11 @@ import React from 'react';
 import { AddNewEventForm } from './AddNewEventForm';
 import '@testing-library/jest-dom/extend-expect';
 
-import { render, fireEvent, screen, getAllByTestId } from '@testing-library/react';
+import { render, fireEvent, screen, getAllByTestId, MatcherFunction } from '@testing-library/react';
 
-const setup = () => {
+const setup = (labelText: string) => {
   const utils = render(<AddNewEventForm />);
-  const input = utils.getByLabelText(/Name/i);
+  const input = utils.getByLabelText(labelText);
   return {
     input,
     ...utils,
@@ -27,14 +27,22 @@ describe('Inputs validation', (): void => {
       expect(getByPlaceholderText(inputName)).toHaveAttribute('value', '');
     },
   );
-  describe('Name input', () => {
-    it('renders validation message when added invalid input value', async () => {
+  describe('renders validation message when added invalid input value on', () => {
+    it('Name input', async () => {
       const { findByText } = render(<AddNewEventForm />);
-      const { input } = setup();
-      fireEvent.change(input, { target: { value: '23' } });
-      expect(input.value).toBe('23');
+      const { input } = setup('Event Name');
+      fireEvent.change(input, { target: { value: 'ab' } });
 
       const alert = await findByText(/Event name must be 3 characters long!/i, { exact: false });
+
+      expect(alert).toBeInTheDocument();
+    });
+    it('Email input', async () => {
+      const { findByText } = render(<AddNewEventForm />);
+      const { input } = setup('Email Address');
+      fireEvent.change(input, { target: { value: 'te' } });
+
+      const alert = await findByText(/Email is not valid!/i, { exact: false });
 
       expect(alert).toBeInTheDocument();
     });

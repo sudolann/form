@@ -34,17 +34,25 @@ exports[`AddNewEventForm should take a snapshot 1`] = `
     <div
       class="form--item"
     >
+      <label
+        for="email"
+      >
+        Email Address
+      </label>
       <input
         class="form--input"
+        id="email"
         name="email"
         placeholder="Email"
         type="email"
-        value=""
+        value="Email is not valid!"
       />
       <p
         class="alert"
         data-testid="error"
-      />
+      >
+        Email is not valid!
+      </p>
     </div>
     <div
       class="form--item"

@@ -86,7 +86,9 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
         <ErrorAlert errorMessage={errors.name} />
       </div>
       <div className="form--item">
+        <label htmlFor="email">Email Address</label>
         <input
+          id="email"
           type="email"
           name="email"
           placeholder="Email"
