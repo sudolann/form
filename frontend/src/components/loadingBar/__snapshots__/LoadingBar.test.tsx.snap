@@ -4,6 +4,7 @@ exports[`LoadingBar should take a snapshot 1`] = `
 <DocumentFragment>
   <div
     class="loading"
+    data-testid="loading"
   >
     <div
       class="MuiCircularProgress-root MuiCircularProgress-colorPrimary MuiCircularProgress-indeterminate"

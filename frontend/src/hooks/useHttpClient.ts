@@ -1,37 +1,62 @@
-import { useState, useCallback } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import * as React from 'react';
+type Method = 'GET' | 'POST' | 'DELETE';
 
-export const useHttpClient = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null |string>(null);
-  
-  const sendRequest = useCallback(
-    async (url: RequestInfo, method = 'GET', body = null, headers = {}) => {
-      setIsLoading(true);
+export interface Arguments {
+  method?: Method;
+  body?: object;
+  options?: object;
+  onRender?: boolean;
+}
+type Status = 'pending' | 'resolved' | 'rejected';
 
-      try {
-        const response = await fetch(url, {
-          method,
-          body,
-          headers,
-        });
+export function useHttpClient(
+  url: string,
+  { method, body, options, onRender }: Arguments = { method: 'GET', onRender: true },
+) {
+  const [status, setStatus] = React.useState<null | Status>(null);
+  const [error, setError] = React.useState<null | string>(null);
+  const [data, setData] = React.useState<null | { eventId: string }>(null);
+  const [hasToRender, setHasToRender] = React.useState(onRender);
 
-        const responseData = await response.json();
-        console.log(responseData, 'responseData')
+  const executeRequest = async () => {
+    setStatus('pending');
 
-        if (!response.ok) {
-          setError(responseData.message);
-        }
+    setHasToRender(true);
+    try {
+      const parameters =
+        method === 'POST'
+          ? { method, body: JSON.stringify(body), ...options }
+          : { method, ...options };
+      const response = await fetch(url, parameters);
+      const json = await response.json();
 
-        setIsLoading(false);
-        return responseData;
-      } catch (err) {
-        setError(err.message);
-        setIsLoading(false);
-        throw err;
+      if (!response.ok) {
+        setError(json.error);
+        throw error;
       }
-    },
-    []
-  );
 
-  return { isLoading, error, sendRequest, setError };
-};
+      setHasToRender(false);
+      setData(json);
+      setStatus('resolved');
+    } catch (error) {
+      setError(error);
+      setStatus('rejected');
+      setHasToRender(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (hasToRender) {
+      executeRequest();
+      setHasToRender(false);
+    }
+  }, [url, hasToRender, status, executeRequest]);
+
+  return {
+    status,
+    error,
+    data,
+    executeRequest,
+  };
+}

@@ -1,9 +1,4 @@
-import React, {
-  FunctionComponent,
-  ReactElement,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FunctionComponent, ReactElement, useEffect, useState } from 'react';
 import { ErrorAlert } from '../errorAlert/ErrorAlert';
 import { EventProps } from '../eventById/EventById';
 import { LoadingBar } from '../loadingBar/LoadingBar';
@@ -16,48 +11,41 @@ export interface EventPropsState extends EventProps {
 }
 
 export const EventsList: FunctionComponent = (): ReactElement => {
-  const { isLoading, error, sendRequest } = useHttpClient();
-  const [eventsList, setEventsList] = useState<EventPropsState[]>();
-  useEffect((): void => {
-    const fetchEvent = async (): Promise<void> => {
-      try {
-        const responseData = await sendRequest(
-          `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/events`,
-        );
+  // const { isLoading, error, sendRequest } = useHttpClient();
+  // const [eventsList, setEventsList] = useState<EventPropsState[]>();
+  // useEffect((): void => {
+  //   const fetchEvent = async (): Promise<void> => {
+  //     try {
+  //       const responseData = await sendRequest(
+  //         `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/events`,
+  //       );
 
-        const dataMapped = responseData.map(
-          (data: { _id: any; name: any; email: any; date: any }) => {
-            const { _id, name, email, date } = data;
-            return { id: _id, name, email, date };
-          },
-        );
-        setEventsList(dataMapped);
-      } catch (err) {}
-    };
-    fetchEvent();
-  }, [sendRequest]);
+  //       const dataMapped = responseData.map(
+  //         (data: { _id: any; name: any; email: any; date: any }) => {
+  //           const { _id, name, email, date } = data;
+  //           return { id: _id, name, email, date };
+  //         },
+  //       );
+  //       setEventsList(dataMapped);
+  //     } catch (err) {}
+  //   };
+  //   fetchEvent();
+  // }, [sendRequest]);
 
-  if (isLoading) {
-    return <LoadingBar />;
-  }
-  if (error) {
-    return <ErrorAlert errorMessage={error} fullPage />;
-  }
+  // if (isLoading) {
+  //   return <LoadingBar />;
+  // }
+  // if (error) {
+  //   return <ErrorAlert errorMessage={error} fullPage />;
+  // }
   return (
     <ul className="list">
       <h1>Events List</h1>
-      {eventsList &&
-        eventsList.map((event: EventPropsState) => {
-          const { name, date, email, id } = event;
-          return (
-            <EventListItem
-              name={name}
-              date={date}
-              email={email}
-              key={id}
-            />
-          );
-        })}
     </ul>
   );
 };
+// {eventsList &&
+//   eventsList.map((event: EventPropsState) => {
+//     const { name, date, email, id } = event;
+//     return <EventListItem name={name} date={date} email={email} key={id} />;
+//   })}

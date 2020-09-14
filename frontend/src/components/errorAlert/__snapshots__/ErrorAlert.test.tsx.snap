@@ -4,6 +4,7 @@ exports[`ErrorAlert should take a snapshot 1`] = `
 <DocumentFragment>
   <p
     class="alert"
+    data-testid="error"
   >
     test
   </p>
@@ -14,6 +15,7 @@ exports[`ErrorAlert should take a snapshot when fullPage is true 1`] = `
 <DocumentFragment>
   <div
     class="flex"
+    data-testid="error"
   >
     <p
       class="alert"

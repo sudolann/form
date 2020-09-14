@@ -8,4 +8,8 @@ describe('LoadingBar', () => {
     const { asFragment } = render(<LoadingBar />);
     expect(asFragment()).toMatchSnapshot();
   });
+  it('renders loading bar', () => {
+    const { getByTestId } = render(<LoadingBar />);
+    expect(getByTestId('loading')).toBeInTheDocument();
+  });
 });

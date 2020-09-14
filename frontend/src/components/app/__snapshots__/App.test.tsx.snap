@@ -22,29 +22,13 @@ exports[`App should take a snapshot 1`] = `
         Add new event
       </a>
     </div>
-    <div
-      class="loading"
+    <ul
+      class="list"
     >
-      <div
-        class="MuiCircularProgress-root MuiCircularProgress-colorPrimary MuiCircularProgress-indeterminate"
-        role="progressbar"
-        style="width: 40px; height: 40px;"
-      >
-        <svg
-          class="MuiCircularProgress-svg"
-          viewBox="22 22 44 44"
-        >
-          <circle
-            class="MuiCircularProgress-circle MuiCircularProgress-circleDisableShrink MuiCircularProgress-circleIndeterminate"
-            cx="44"
-            cy="44"
-            fill="none"
-            r="20.2"
-            stroke-width="3.6"
-          />
-        </svg>
-      </div>
-    </div>
+      <h1>
+        Events List
+      </h1>
+    </ul>
   </div>
 </DocumentFragment>
 `;

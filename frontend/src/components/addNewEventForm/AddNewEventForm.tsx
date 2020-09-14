@@ -1,8 +1,4 @@
-import React, {
-  FunctionComponent,
-  ReactElement,
-  useState,
-} from 'react';
+import React, { FunctionComponent, ReactElement, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorAlert } from '../errorAlert/ErrorAlert';
 import { LoadingBar } from '../loadingBar/LoadingBar';
@@ -11,51 +7,35 @@ import { useHistory } from 'react-router';
 import { Button, DatePicker } from 'antd';
 import './AddNewEventForm.scss';
 
-type SubmittedData = { [s: string]: string };
+// type SubmittedData = { [s: string]: string };
 
 export const AddNewEventForm: FunctionComponent = (): ReactElement => {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, watch } = useForm();
   const [date, setDate] = useState<string | undefined>();
-  const [newEventId, setNewEventId] = useState<string | null>(null);
   const history = useHistory();
-  const { isLoading, error, sendRequest, setError } = useHttpClient();
-
-  const addNewNewEvent = async (
-    name: string,
-    email: string,
-    date: string,
-  ): Promise<void> => {
-    try {
-      const responseData = await sendRequest(
-        `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/addNewEvent`,
-        'POST',
-        JSON.stringify({
-          name,
-          email,
-          date,
-        }),
-        {
-          'Content-Type': 'application/json',
+  const { name, email } = watch();
+  const { data, status, executeRequest, error } = useHttpClient(
+    `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/addNewEvent`,
+    {
+      method: 'POST',
+      body: { name, email, date },
+      options: {
+        headers: {
+          'Content-type': 'application/json',
         },
-      );
-      setNewEventId(responseData.eventId);
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-  const onSubmit = (data: SubmittedData): void => {
-    const { name, email } = data;
-    date && addNewNewEvent(name, email, date);
-  };
+      },
+    },
+  );
 
-  if (newEventId) {
-    history.push({ pathname: `/event/${newEventId}` });
+  const onSubmit = (): any => date && executeRequest();
+
+  if (data && data.eventId) {
+    history.push({ pathname: `/event/${data.eventId}` });
   }
 
-  if (isLoading) {
+  if (status === 'pending') {
     return <LoadingBar />;
   }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <h2>Add New Event</h2>
@@ -71,9 +51,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           })}
           className="form--input"
         />
-        {errors.name && (
-          <ErrorAlert errorMessage={errors.name.message} />
-        )}
+        {errors.name && <ErrorAlert errorMessage={errors.name.message} />}
         {errors.name && errors.name.type === 'minLength' && (
           <ErrorAlert errorMessage="Min three letters name" />
         )}
@@ -92,17 +70,12 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           })}
           className="form--input"
         />
-        {errors.email && (
-          <ErrorAlert errorMessage={errors.email.message} />
-        )}
+        {errors.email && <ErrorAlert errorMessage={errors.email.message} />}
       </div>
-
       <div className="form--item">
         <DatePicker
           name="event date"
-          onChange={(_date: any, dateString: string): void =>
-            setDate(dateString)
-          }
+          onChange={(_date: any, dateString: string): void => setDate(dateString)}
           style={{ width: '200px' }}
           size="large"
         />
@@ -110,7 +83,6 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
           <ErrorAlert errorMessage="Date is required" />
         )}
       </div>
-
       <Button type="primary" htmlType="submit" className="btn-form">
         Add event
       </Button>
