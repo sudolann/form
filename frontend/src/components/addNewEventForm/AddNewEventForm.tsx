@@ -15,29 +15,23 @@ const validateForm = (errors: EventProps, inputs: EventProps): boolean => {
   return valid;
 };
 
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-);
+const validEmailRegex = RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
 const initialValue = { name: '', email: '', date: '' };
 
 export const AddNewEventForm: FunctionComponent = (): ReactElement => {
   const [inputs, setInputs] = useState<EventProps>(initialValue);
   const [errors, setErrors] = useState<EventProps>(initialValue);
-
   const history = useHistory();
 
-  const { data, status, executeRequest, error } = useHttpClient(
-    `http://localhost:${process.env.REACT_APP_BACKEND_PORT}/addNewEvent`,
-    {
-      method: 'POST',
-      body: { name: inputs.name, email: inputs.email, date: inputs.date },
-      options: {
-        headers: {
-          'Content-type': 'application/json',
-        },
+  const { data, status, executeRequest } = useHttpClient(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/addNewEvent`, {
+    method: 'POST',
+    body: { name: inputs.name, email: inputs.email, date: inputs.date },
+    options: {
+      headers: {
+        'Content-type': 'application/json',
       },
     },
-  );
+  });
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { name, value } = event.target;
@@ -55,10 +49,7 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
     setErrors(errors);
   };
 
-  const handleSubmit = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    validateForm(errors, inputs) && executeRequest();
-  };
+  const handleSubmit = () => validateForm(errors, inputs) && executeRequest();
 
   if (data && data.eventId) {
     history.push({ pathname: `/event/${data.eventId}` });
@@ -67,55 +58,28 @@ export const AddNewEventForm: FunctionComponent = (): ReactElement => {
   if (status === 'pending') {
     return <LoadingBar />;
   }
+
   return (
-    <form onSubmit={handleSubmit} className="form">
+    <form onSubmit={handleSubmit} className="form" data-testid="form">
       <h2>Add New Event</h2>
-      {error && <ErrorAlert errorMessage={error} />}
+      {status === 'rejected' && <ErrorAlert errorMessage="Failed to add new event" />}
+
       <div className="form--item">
         <label htmlFor="name">Event Name</label>
-        <input
-          id="name"
-          type="text"
-          name="name"
-          value={inputs.name}
-          onChange={handleChange}
-          className="form--input"
-        />
+        <input id="name" type="text" name="name" value={inputs.name} onChange={handleChange} className="form--input" />
         <ErrorAlert errorMessage={errors.name} />
       </div>
       <div className="form--item">
         <label htmlFor="email">Email Address</label>
-        <input
-          id="email"
-          type="email"
-          name="email"
-          value={inputs.email}
-          onChange={handleChange}
-          className="form--input"
-        />
+        <input id="email" type="email" name="email" value={inputs.email} onChange={handleChange} className="form--input" />
         <ErrorAlert errorMessage={errors.email} />
       </div>
       <div className="form--item">
-        <label htmlFor="event">Event Date</label>
-        <DatePicker
-          id="event"
-          name="event date"
-          onChange={(_date: any, dateString: string): any =>
-            dateString === ''
-              ? setErrors({ ...errors, date: 'Date is required!' })
-              : (setInputs({ ...inputs, date: dateString }), setErrors({ ...errors, date: '' }))
-          }
-          style={{ width: '200px' }}
-          size="large"
-        />
+        <label htmlFor="date">Event Date</label>
+        <DatePicker id="date" data-testid="date" name="event date" onChange={(_date: any, dateString: string): any => (dateString === '' ? setErrors({ ...errors, date: 'Date is required!' }) : (setInputs({ ...inputs, date: dateString }), setErrors({ ...errors, date: '' })))} style={{ width: '200px' }} size="large" />
         <ErrorAlert errorMessage={errors.date} />
       </div>
-      <Button
-        type="primary"
-        htmlType="submit"
-        className="btn-form"
-        disabled={!validateForm(errors, inputs)}
-      >
+      <Button type="primary" data-testid="submit-btn" htmlType="submit" className="btn-form" disabled={!validateForm(errors, inputs)}>
         Add event
       </Button>
     </form>

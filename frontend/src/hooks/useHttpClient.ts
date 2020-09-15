@@ -10,12 +10,9 @@ export interface Arguments {
 }
 type Status = 'pending' | 'resolved' | 'rejected';
 
-export function useHttpClient(
-  url: string,
-  { method, body, options, onRender }: Arguments = { method: 'GET', onRender: true },
-) {
+export function useHttpClient(url: string, { method, body, options, onRender }: Arguments = { method: 'GET', onRender: true }) {
   const [status, setStatus] = React.useState<null | Status>(null);
-  const [error, setError] = React.useState<null | string>(null);
+  const [error, setError] = React.useState<null | object>(null);
   const [data, setData] = React.useState<null | { eventId: string }>(null);
   const [hasToRender, setHasToRender] = React.useState(onRender);
 
@@ -24,10 +21,7 @@ export function useHttpClient(
 
     setHasToRender(true);
     try {
-      const parameters =
-        method === 'POST'
-          ? { method, body: JSON.stringify(body), ...options }
-          : { method, ...options };
+      const parameters = method === 'POST' ? { method, body: JSON.stringify(body), ...options } : { method, ...options };
       const response = await fetch(url, parameters);
       const json = await response.json();
 

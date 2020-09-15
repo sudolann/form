@@ -2,10 +2,24 @@ import React from 'react';
 import { AddNewEventForm } from './AddNewEventForm';
 import '@testing-library/jest-dom/extend-expect';
 
-import { render, fireEvent, cleanup } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
+import { renderHook, act, cleanup } from '@testing-library/react-hooks';
+
+import { server } from '../../testUtils/server-handlers';
+import { useHttpClient } from '../../hooks/useHttpClient';
+
+beforeAll(() => {
+  jest.spyOn(window, 'fetch');
+  server.listen();
+});
+afterAll(() => {
+  server.close();
+});
 afterEach(() => {
+  server.resetHandlers();
   cleanup();
 });
+
 const setup = (labelText: string) => {
   const utils = render(<AddNewEventForm />);
   const input = utils.getByLabelText(labelText);
@@ -14,6 +28,39 @@ const setup = (labelText: string) => {
     ...utils,
   };
 };
+
+test('shows server error if the request fails', async () => {
+  const { getByLabelText, getByRole, asFragment } = render(<AddNewEventForm />);
+
+  const { result, waitForNextUpdate } = renderHook(() =>
+    useHttpClient('https://form-d.herokuapp.com/addNewEvent', {
+      method: 'POST',
+      body: { name: 'test', email: 'me@gmail.com', date: '20/02/2020' },
+      options: {
+        headers: {
+          'Content-type': 'application/json',
+        },
+      },
+    }),
+  );
+
+  fireEvent.change(getByLabelText(/Event Name/i), { target: { value: 'test' } });
+  fireEvent.change(getByLabelText(/Email Address/i), { target: { value: 'me@wp.pl' } });
+  const startDate = screen.getByTestId('date');
+
+  fireEvent.mouseDown(startDate);
+  fireEvent.change(startDate, { target: { value: '10-12-2020' } });
+
+  fireEvent.submit(screen.getByTestId('submit-btn'));
+  act(() => result.current.executeRequest());
+  await waitForNextUpdate();
+  console.log(result.current, 'ba');
+  await waitForNextUpdate();
+  console.log(result.current, 'na');
+  await waitForNextUpdate();
+
+  expect(asFragment()).toMatchSnapshot();
+});
 
 describe('AddNewEventForm', () => {
   it('should take a snapshot', () => {
@@ -37,14 +84,11 @@ describe('Inputs validation', (): void => {
     ${'Event Name'}    | ${['type', 'text']}
     ${'Email Address'} | ${['type', 'email']}
     ${'Event Date'}    | ${['name', 'event date']}
-  `(
-    '$inputName has an defined attributes and their value is empty by default',
-    ({ inputName, attr }): void => {
-      const { getByLabelText } = render(<AddNewEventForm />);
-      expect(getByLabelText(inputName)).toHaveAttribute(attr[0], attr[1]);
-      expect(getByLabelText(inputName)).toHaveAttribute('value', '');
-    },
-  );
+  `('$inputName has an defined attributes and their value is empty by default', ({ inputName, attr }): void => {
+    const { getByLabelText } = render(<AddNewEventForm />);
+    expect(getByLabelText(inputName)).toHaveAttribute(attr[0], attr[1]);
+    expect(getByLabelText(inputName)).toHaveAttribute('value', '');
+  });
   describe('renders validation message when', () => {
     it.each`
       value
