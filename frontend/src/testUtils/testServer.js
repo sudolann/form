@@ -1,6 +1,10 @@
 import 'whatwg-fetch';
-import { rest } from 'msw';
-import { setupServer } from 'msw/node';
+import {
+  rest
+} from 'msw';
+import {
+  setupServer
+} from 'msw/node';
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com/';
 
@@ -9,12 +13,10 @@ const server = setupServer(
     return res(
       ctx.status(200),
       ctx.json({
-        posts: [
-          {
-            title: 'title 1',
-            content: 'content 1',
-          },
-        ],
+        posts: [{
+          title: 'title 1',
+          content: 'content 1',
+        }, ],
       }),
     );
   }),
@@ -22,7 +24,9 @@ const server = setupServer(
     return res(
       ctx.status(500),
       ctx.json({
-        error: 'Please add request handler',
+        error: {
+          message: 'Please add request handler'
+        },
       }),
     );
   }),
@@ -31,7 +35,9 @@ const server = setupServer(
       return res(
         ctx.status(404),
         ctx.json({
-          error: 'Post is not provied',
+          error: {
+            message: 'Post is not provided',
+          }
         }),
       );
     }
@@ -48,7 +54,9 @@ const server = setupServer(
       return res(
         ctx.status(404),
         ctx.json({
-          error: 'ID must be provied',
+          error: {
+            message: 'ID must be provied',
+          }
         }),
       );
     }
@@ -66,4 +74,8 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 afterEach(() => server.resetHandlers());
 
-export { server, rest, BASE_URL };
+export {
+  server,
+  rest,
+  BASE_URL
+};

@@ -1,12 +1,11 @@
 import React from 'react';
 import { AddNewEventForm } from './AddNewEventForm';
-import '@testing-library/jest-dom/extend-expect';
-
 import { render, fireEvent, screen } from '@testing-library/react';
 import { renderHook, act, cleanup } from '@testing-library/react-hooks';
 
 import { server } from '../../testUtils/server-handlers';
 import { useHttpClient } from '../../hooks/useHttpClient';
+import '@testing-library/jest-dom/extend-expect';
 
 beforeAll(() => {
   jest.spyOn(window, 'fetch');
@@ -30,9 +29,9 @@ const setup = (labelText: string) => {
 };
 
 test('shows server error if the request fails', async () => {
-  const { getByLabelText, getByRole, asFragment } = render(<AddNewEventForm />);
+  const { getByLabelText, asFragment } = render(<AddNewEventForm />);
 
-  const { result, waitForNextUpdate } = renderHook(() =>
+  const { result } = renderHook(() =>
     useHttpClient('https://form-d.herokuapp.com/addNewEvent', {
       method: 'POST',
       body: { name: 'test', email: 'me@gmail.com', date: '20/02/2020' },
@@ -53,11 +52,6 @@ test('shows server error if the request fails', async () => {
 
   fireEvent.submit(screen.getByTestId('submit-btn'));
   act(() => result.current.executeRequest());
-  await waitForNextUpdate();
-  console.log(result.current, 'ba');
-  await waitForNextUpdate();
-  console.log(result.current, 'na');
-  await waitForNextUpdate();
 
   expect(asFragment()).toMatchSnapshot();
 });
@@ -101,7 +95,6 @@ describe('Inputs validation', (): void => {
       const { getAllByTestId } = render(<AddNewEventForm />);
       const { input } = setup('Event Name');
       fireEvent.change(input, { target: { value } });
-      expect(input.value).toBe(value);
       const alert = getAllByTestId('error')[0];
 
       expect(alert).toHaveTextContent(/Event name must be 3 characters long!/i);
@@ -117,7 +110,6 @@ describe('Inputs validation', (): void => {
       const { getAllByTestId } = render(<AddNewEventForm />);
       const { input } = setup('Email Address');
       fireEvent.change(input, { target: { value } });
-      expect(input.value).toBe(value);
       const alert = getAllByTestId('error')[1];
 
       expect(alert).toHaveTextContent(/Email is not valid!/i);
@@ -131,7 +123,6 @@ describe('Inputs validation', (): void => {
         const { getAllByTestId } = render(<AddNewEventForm />);
         const { input } = setup('Event Name');
         fireEvent.change(input, { target: { value } });
-        expect(input.value).toBe(value);
         const alert = getAllByTestId('error')[0];
 
         expect(alert).not.toHaveTextContent(/Event name must be 3 characters long!/i);
@@ -144,7 +135,6 @@ describe('Inputs validation', (): void => {
         const { getAllByTestId } = render(<AddNewEventForm />);
         const { input } = setup('Email Address');
         fireEvent.change(input, { target: { value } });
-        expect(input.value).toBe(value);
         const alert = getAllByTestId('error')[1];
 
         expect(alert).not.toHaveTextContent(/Email is not valid!/i);

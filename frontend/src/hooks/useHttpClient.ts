@@ -12,8 +12,8 @@ type Status = 'pending' | 'resolved' | 'rejected';
 
 export function useHttpClient(url: string, { method, body, options, onRender }: Arguments = { method: 'GET', onRender: true }) {
   const [status, setStatus] = React.useState<null | Status>(null);
-  const [error, setError] = React.useState<null | object>(null);
-  const [data, setData] = React.useState<null | { eventId: string }>(null);
+  const [error, setError] = React.useState<null | string>(null);
+  const [data, setData] = React.useState<any>(null);
   const [hasToRender, setHasToRender] = React.useState(onRender);
 
   const executeRequest = async () => {
@@ -34,7 +34,7 @@ export function useHttpClient(url: string, { method, body, options, onRender }: 
       setData(json);
       setStatus('resolved');
     } catch (error) {
-      setError(error);
+      setError((error && error.message) || 'error');
       setStatus('rejected');
       setHasToRender(false);
     }
