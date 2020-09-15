@@ -1,11 +1,11 @@
-import React from 'react';
-import { EventById } from './EventById';
-import '@testing-library/jest-dom/extend-expect';
-import * as router from 'react-router';
-import { renderHook, act, cleanup } from '@testing-library/react-hooks';
-import { render } from '@testing-library/react';
-import { server } from '../../testUtils/server-handlers';
-import { useHttpClient } from '../../hooks/useHttpClient';
+import React from 'react'
+import {EventById} from './EventById'
+import '@testing-library/jest-dom/extend-expect'
+import * as router from 'react-router'
+import {renderHook, act, cleanup} from '@testing-library/react-hooks'
+import {render} from '@testing-library/react'
+import {server} from '../../testUtils/server-handlers'
+import {useHttpClient} from '../../hooks/useHttpClient'
 
 jest.mock('react-router', () => ({
   useLocation: jest.fn(),
@@ -13,31 +13,39 @@ jest.mock('react-router', () => ({
   useHistory: () => ({
     push: jest.fn(),
   }),
-}));
+}))
 
 beforeAll(() => {
-  server.listen();
-});
+  server.listen()
+  spyOn(console, 'error')
+  spyOn(console, 'warn')
+})
 afterAll(() => {
-  server.close();
-});
+  server.close()
+})
 afterEach(() => {
-  server.resetHandlers();
-  cleanup();
-});
+  server.resetHandlers()
+  cleanup()
+})
 
 describe('EventById', () => {
   beforeEach(() => {
-    jest.spyOn(router, 'useParams').mockReturnValue({ eventId: '5f60bd0473ad66b05472379a' });
-  });
+    jest
+      .spyOn(router, 'useParams')
+      .mockReturnValue({eventId: '5f60bd0473ad66b05472379a'})
+  })
 
   it('return data object', async () => {
-    render(<EventById />);
-    const { result } = renderHook(() => useHttpClient('https://form-d.herokuapp.com/event/5f60bd0473ad66b05472379a'));
-    await act(() => result.current.executeRequest());
+    render(<EventById />)
+    const {result} = renderHook(() =>
+      useHttpClient(
+        'https://form-d.herokuapp.com/event/5f60bd0473ad66b05472379a',
+      ),
+    )
+    await act(() => result.current.executeRequest())
 
-    expect(result.current.status).toBe('resolved');
-    expect(result.current.data).toBeDefined();
-    expect(result.current.error).toBeNull();
-  });
-});
+    expect(result.current.status).toBe('resolved')
+    expect(result.current.data).toBeDefined()
+    expect(result.current.error).toBeNull()
+  })
+})

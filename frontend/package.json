@@ -34,9 +34,15 @@
     "build": "react-scripts build",
     "test": "set CI=true && react-scripts test",
     "test:watch": "react-scripts test",
-    "test:coverage": "set CI=true && react-scripts test --coverage",
+    "test:coverage": "CI=true npm test -- --env=jsdom --coverage",
     "eject": "react-scripts eject",
-    "integration test": "node_modules/.bin/cypress open"
+    "integration test": "node_modules/.bin/cypress open",
+    "cy:run": "cypress run",
+    "cy:open": "cypress open",
+    "test:e2e": "is-ci \"test:e2e:run\" \"test:e2e:dev\"",
+    "pretest:e2e:run": "npm run build",
+    "test:e2e:run": "start-server-and-test start http://localhost:3000 cy:run",
+    "test:e2e:dev": "start-server-and-test dev http://localhost:3000 cy:open"
   },
   "eslintConfig": {
     "extends": "react-app"
