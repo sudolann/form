@@ -3,8 +3,8 @@ import {ErrorAlert} from '../errorAlert/ErrorAlert'
 import {EventProps} from '../eventById/EventById'
 import {LoadingBar} from '../loadingBar/LoadingBar'
 import {EventListItem} from '../eventListItem/EventListItem'
-import './EventsList.scss'
 import {useHttpClient} from '../../hooks/useHttpClient'
+import './EventsList.scss'
 
 export interface EventPropsState extends EventProps {
   _id: string
